@@ -1,0 +1,53 @@
+#
+# Macro file for "NeutronSource.cc"
+#
+#/random/setSeeds 19577794 424238336
+
+/control/verbose 2
+/run/verbose 1
+#
+/testhadr/phys/thermalScattering true
+
+/testhadr/det/setNbOfAbsor  6
+/testhadr/det/setAbsor 1 AlMg3  0.02 cm
+/testhadr/det/setAbsor 2 Alu  0.01 cm
+/testhadr/det/setAbsor 3 B4C_enriched  0.0001 cm
+/testhadr/det/setAbsor 4 SSteel  0.004 cm
+/testhadr/det/setAbsor 5 AlMg3  0.025 cm
+/testhadr/det/setAbsor 6 AlMg3  0.02 cm
+/testhadr/det/setSizeY 100 mm
+/testhadr/det/setSizeZ 60 mm
+
+# To save the energy deposition in the slilcion slabs for dose calculations
+# Set-> SetSiliconSlabs 1 and saveSiliconData 1 and saveFluxData 0
+# To save the particles emerging from the world volume
+# Set-> SetSiliconSlabs 0 and saveSiliconData 0 and saveFluxData 1
+/testhadr/det/SetSiliconSlabs 1
+/stepping/saveSiliconData 1
+/stepping/saveFluxData 0
+#
+/run/initialize
+#
+# Set a very high time threshold to allow all decays to happen
+#/process/had/rdm/thresholdForVeryLongDecayTime 1.0e+60 year
+#
+/gps/position -1 0 0 mm
+/gps/pos/type Plane
+/gps/pos/shape Rectangle
+/gps/pos/halfx 15 mm
+/gps/pos/halfy 30 mm
+/gps/particle neutron
+/gps/ene/mono 0.025 eV
+/gps/pos/rot1 0 0 1
+/gps/pos/rot2 0 1 0
+/gps/direction 1 0 0
+#
+/analysis/setFileName NeutronSource_run0_thermalScattering_deneme_silicon_save
+/analysis/h1/set 4 100  0. 10.  MeV #gammas
+/analysis/h1/set 6  60  0. 12.  MeV #neutrons
+
+#
+/tracking/verbose 0
+#
+#/run/printProgress 100000
+/run/beamOn 1000
