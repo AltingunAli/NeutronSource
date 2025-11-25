@@ -1,0 +1,94 @@
+//
+// ********************************************************************
+// * License and Disclaimer                                           *
+// *                                                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
+// *                                                                  *
+// * Neither the authors of this software system, nor their employing *
+// * institutes,nor the agencies providing financial support for this *
+// * work  make  any representation or  warranty, express or implied, *
+// * regarding  this  software system or assume any liability for its *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
+// *                                                                  *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
+// ********************************************************************
+//
+//
+// --------------------------------------------------------------
+//   GEANT 4 - Underground Dark Matter Detector Advanced Example
+//
+//      For information related to this code contact: Alex Howard
+//      e-mail: alexander.howard@cern.ch
+// --------------------------------------------------------------
+// Comments
+//
+//                  Underground Advanced
+//               by A. Howard and H. Araujo
+//                    (27th November 2001)
+//
+// SteppingActionMessenger program
+// --------------------------------------------------------------
+
+#include "SteppingActionMessenger.hh"
+
+#include "SteppingAction.hh"
+
+#include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
+#include "G4UIdirectory.hh"
+#include "globals.hh"
+
+SteppingActionMessenger::SteppingActionMessenger(SteppingAction *SA)
+    : steppingAction(SA) {
+
+  // ##################################################################################//
+  // fSteppingDir = new G4UIdirectory("/stepping/");
+  // fSteppingDir->SetGuidance("commands specific to this example");
+
+  SaveSiliconData = new G4UIcmdWithAnInteger("/stepping/saveSiliconData", this);
+  SaveSiliconData->SetGuidance("Save the energy deposition in silicon.");
+  SaveSiliconData->SetParameterName("saveSilData", false);
+  // SaveSiliconData->SetRange("saveSilData=>0");
+  SaveSiliconData->AvailableForStates(G4State_PreInit, G4State_Idle);
+  SaveSiliconData->SetToBeBroadcasted(false);
+
+  SaveFluxData = new G4UIcmdWithAnInteger("/stepping/saveFluxData", this);
+  SaveFluxData->SetGuidance(
+      "Save the particles emerging from the world volume.");
+  SaveFluxData->SetParameterName("saveFlux", false);
+  // SaveFluxData->SetRange("saveSilData=>0");
+  SaveFluxData->AvailableForStates(G4State_PreInit, G4State_Idle);
+  SaveFluxData->SetToBeBroadcasted(false);
+}
+
+// ooooooooooooooooooooooooooooooooooooooooo
+SteppingActionMessenger::~SteppingActionMessenger() {
+
+  delete SaveSiliconData;
+  delet SaveFluxData;
+  // delete fSteppingDir;
+}
+
+// ooooooooooooooooooooooooooooooooooooooooo
+void SteppingActionMessenger::SetNewValue(G4UIcommand *command,
+                                          G4String newValue) {
+
+  if (command == SaveSiliconData) {
+    steppingAction->SaveSiliconEdepData(
+        SaveSiliconData->GetNewIntValue(newValue));
+  }
+
+  if (command == SaveFluxData) {
+    SaveFluxData->SaveParticleFluxData(SaveFluxData->GetNewIntValue(newValue));
+  }
+}
