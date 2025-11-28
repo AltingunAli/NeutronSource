@@ -101,6 +101,7 @@ RunAction::RunAction(DetectorConstruction *det, PrimaryGeneratorAction *prim)
   analysisManager->CreateNtupleDColumn("MeandEdx");
   analysisManager->CreateNtupleDColumn("StopPower");
   analysisManager->CreateNtupleSColumn("fCreatorProcessName");
+  analysisManager->CreateNtupleSColumn("fPVatVertexname");
 
   analysisManager->FinishNtuple(2);
 
@@ -122,6 +123,7 @@ RunAction::RunAction(DetectorConstruction *det, PrimaryGeneratorAction *prim)
   analysisManager->CreateNtupleDColumn("MeandEdx");
   analysisManager->CreateNtupleDColumn("StopPower");
   analysisManager->CreateNtupleSColumn("fCreatorProcessName");
+  analysisManager->CreateNtupleSColumn("fPVatVertexname");
 
   analysisManager->FinishNtuple(3);
 
@@ -143,6 +145,7 @@ RunAction::RunAction(DetectorConstruction *det, PrimaryGeneratorAction *prim)
   analysisManager->CreateNtupleDColumn("MeandEdx");
   analysisManager->CreateNtupleDColumn("StopPower");
   analysisManager->CreateNtupleSColumn("fCreatorProcessName");
+  analysisManager->CreateNtupleSColumn("fPVatVertexname");
 
   analysisManager->FinishNtuple(4);
 
@@ -164,6 +167,7 @@ RunAction::RunAction(DetectorConstruction *det, PrimaryGeneratorAction *prim)
   analysisManager->CreateNtupleDColumn("MeandEdx");
   analysisManager->CreateNtupleDColumn("StopPower");
   analysisManager->CreateNtupleSColumn("fCreatorProcessName");
+  analysisManager->CreateNtupleSColumn("fPVatVertexname");
 
   analysisManager->FinishNtuple(5);
 
@@ -181,6 +185,7 @@ RunAction::RunAction(DetectorConstruction *det, PrimaryGeneratorAction *prim)
   analysisManager->CreateNtupleSColumn("fInteractionType");
   analysisManager->CreateNtupleSColumn("targetIsotope");
   analysisManager->CreateNtupleSColumn("fCreatorProcessName");
+  analysisManager->CreateNtupleSColumn("fPVatVertexname");
 
   analysisManager->FinishNtuple(6);
 }

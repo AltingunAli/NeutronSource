@@ -75,7 +75,7 @@ SteppingActionMessenger::SteppingActionMessenger(SteppingAction *SA)
 SteppingActionMessenger::~SteppingActionMessenger() {
 
   delete SaveSiliconData;
-  delet SaveFluxData;
+  delete SaveFluxData;
   // delete fSteppingDir;
 }
 
@@ -89,6 +89,6 @@ void SteppingActionMessenger::SetNewValue(G4UIcommand *command,
   }
 
   if (command == SaveFluxData) {
-    SaveFluxData->SaveParticleFluxData(SaveFluxData->GetNewIntValue(newValue));
+    steppingAction->SaveParticleFluxData(SaveFluxData->GetNewIntValue(newValue));
   }
 }
