@@ -411,7 +411,7 @@ void SteppingAction::UserSteppingAction(const G4Step *aStep) {
 
   G4double EDifference = (postKineticEnergy - preKineticEnergy) / CLHEP::MeV;
 
-  G4int print_step_info = 0;
+  print_step_info = 0;
   if (print_step_info) {
     std::cout << "Event Number: " << evt << std::endl;
     std::cout << "Particle: " << fParticleName << std::endl;

@@ -52,8 +52,9 @@ public:
 private:
   EventAction *fEventAction = nullptr;
   G4int save_silicon_data = 0;
-   G4int save_flux_data = 0;
- SteppingActionMessenger *steppingMessenger = nullptr;
+  G4int save_flux_data = 0;
+  G4int print_step_info = 0;
+  SteppingActionMessenger *steppingMessenger = nullptr;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
