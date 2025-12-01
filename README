@@ -107,6 +107,9 @@
    xml, csv, by using namespace in HistoManager.hh
    
    The results are saved in NTuples.
+
+   There is a parameter called print_step_info in the SteppingAction. Set this parameter to 1 if you need to
+   print out the particle step information on the terminal to investigate the interactions, secondary particle production etc.
  	 				
  6- VISUALIZATION
  
