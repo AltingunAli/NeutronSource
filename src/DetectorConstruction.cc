@@ -117,16 +117,15 @@ void DetectorConstruction::DefineMaterials() {
   G4double d;            // density
   G4double fractionmass; // mass fraction
 
+  // Create the AlMg3 material
+  // The composition is roughly 3% Magnesium by weight
+  // Average density of aluminum alloys is around 2.7 g/cm³
   A = 26.98 * g / mole;
   G4Element *Al = new G4Element("TS_Aluminium_Metal", "Al", Z = 13., A);
-
   // G4Element *Al = new G4Element("Aluminum", "Al", Z = 13., A);
-
   A = 24.305 * g / mole;
   G4Element *Mg = new G4Element("Magnesium", "Mg", Z = 12., A);
-  // Create the AlMg3 material
-  // The composition is roughly 3% Magnesium by weight [11]
-  // Average density of aluminum alloys is around 2.7 g/cm³ [2, 11]
+
   d = 2.67 * g / cm3; // g/cm^3
   G4Material *AlMg3 = new G4Material("AlMg3", d, 2);
   AlMg3->AddElement(Al, fractionmass = 0.97); // 97% Aluminum
@@ -254,7 +253,7 @@ G4VPhysicalVolume *DetectorConstruction::ConstructVolumes() {
                               false,           // no boolean operation
                               0);              // copy number
 
-  // lWorld->SetVisAttributes(G4VisAttributes::GetInvisible());
+  lWorld->SetVisAttributes(G4VisAttributes::GetInvisible());
 
   // ################################################################################//
   // Creating the silicon box around the monitor to measure energy deposition
@@ -351,6 +350,10 @@ G4VPhysicalVolume *DetectorConstruction::ConstructVolumes() {
   // Monitor geometry: multiple slabs
   // ################################################################################//
   fXfront[0] = -0.5 * fAbsorSizeX;
+
+  std::cout << "fAbsorSizeX: " << fAbsorSizeX << std::endl;
+  std::cout << "fAbsorSizeY: " << fAbsorSizeY << std::endl;
+  std::cout << "fAbsorSizeZ: " << fAbsorSizeZ << std::endl;
   //
   for (G4int k = 1; k <= fNbOfAbsor; k++) {
     G4Material *material = fAbsorMaterial_Slab[k];
@@ -368,19 +371,69 @@ G4VPhysicalVolume *DetectorConstruction::ConstructVolumes() {
     // fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1];
 
     //********************************************************************************/
-    // The first part of the monitor is placed without gap on the world origin.
-    // The third slab (which is Boron Carbide) is also placed without gap to the
-    // second slab, which is Aluminum Magnesium alloy. B4C has good thermal
-    // neutron absorption performance and it is coated on the AlMg3 slab.
-    // Therefore, in order to avoid any air gap between these two slabs, they
-    // are placed together.
-    // A 1 mm gap is added between the other slabs to avoid overlapping volumes.
+    // -The first slab is AlMg3(Aluminum-Magnesium alloy) as the front window
+    // material.
+
+    // -The second slab(s) is (are) 100 micron aluminum plate coated
+    // with 1 micron of B4C_enriched (Boron Carbide) as the neutron converter.
+    // B4C has good thermal neutron absorption performance and it is coated on
+    // the AlMg3 slab.
+
+    // -The third slab is 40 micron thick Stainless Steel as mesh.
+
+    // -The fourth slab is 500 micron thick AlMg3 as anode plate.
+
+    // -Finally, the fifth slab is 200 micron thick AlMg3 as the back window.
+
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        * <-1mm-> *<-1.7mm->*<-100um->* <-1mm-> *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+    //        *         *         *         *         *
+
+    //      AlMg3     Al-B4C    SSteel     AlMg3      AlMg3
+    //     (front)  (converter) (mesh)    (anode)     (back)
+    //     (200um)  (100um+1um) (40um)    (500 um)   (200 um)
+
+    // Check the macro file for the material and thickness definitions.
     //********************************************************************************/
-    if (k == 1 || k == 3) {
+    // The distance between the slabs. This is hardcoded for now. In the future,
+    // we will implement this in a more flexible way. Or we will use gdml for
+    // complex geometries.
+    //--------------------------------------------------------------------------------/
+    // if (k == 1 || k == 3) {
+    //   fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1];
+    // } else {
+    //   fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1] + 1. * mm;
+    // }
+    //--------------------------------------------------------------------------------/
+    switch (k) {
+    case 1:
       fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1];
-    } else {
+      break;
+    case 2:
       fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1] + 1. * mm;
+      break;
+    case 3:
+      fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1];
+      break;
+    case 4:
+      fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1] + 1.7 * mm;
+      break;
+    case 5:
+      fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1] + 0.1 * mm;
+      break;
+    case 6:
+      fXfront[k] = fXfront[k - 1] + fAbsorThickness[k - 1] + 1. * mm;
+      break;
     }
+
     //********************************************************************************/
     // Create the physical volume for the slabs
     //********************************************************************************/
@@ -401,7 +454,7 @@ G4VPhysicalVolume *DetectorConstruction::ConstructVolumes() {
       AbsorAtt = new G4VisAttributes(G4Color(0.5, 0.5, 0.5));
       logicAbsor->SetVisAttributes(AbsorAtt);
     } else if (matname == "B4C_enriched") {
-      AbsorAtt = new G4VisAttributes(G4Color(0.0, 0.0, 0.0));
+      AbsorAtt = new G4VisAttributes(G4Color(0.0, 0.0, 0.0, 0.4));
       logicAbsor->SetVisAttributes(AbsorAtt);
     } else if (matname == "SSteel") {
       AbsorAtt = new G4VisAttributes(G4Color(0.5, 0.5, 0.6));
