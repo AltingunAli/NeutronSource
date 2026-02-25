@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 
   if (ui) {
     // interactive mode
-    UImanager->ApplyCommand("/control/execute vis.mac");
+    // UImanager->ApplyCommand("/control/execute vis.mac");
     ui->SessionStart();
     delete ui;
   } else {
